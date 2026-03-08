@@ -1,58 +1,29 @@
-import ProductCard from "./ProductCard";
+"use client";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-
-const products = [
-  {
-    id: 1,
-    name: "Oversized Cotton Tee",
-    price: "49",
-    category: "T-Shirts",
-    slug: "t-shirts",
-    image: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=600&q=80",
-  },
-  {
-    id: 2,
-    name: "Relaxed Cargo Pants",
-    price: "89",
-    category: "Bottoms",
-    slug: "bottoms",
-    image: "https://images.unsplash.com/photo-1542272604-787c3835535d?w=600&q=80",
-  },
-  {
-    id: 3,
-    name: "Washed Zip Hoodie",
-    price: "110",
-    category: "Hoodies",
-    slug: "hoodies",
-    image: "https://images.unsplash.com/photo-1509942774463-acf339cf87d5?w=600&q=80",
-  },
-  {
-    id: 4,
-    name: "Slim Track Jacket",
-    price: "95",
-    category: "Jackets",
-    slug: "jackets",
-    image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&q=80",
-  },
-  {
-    id: 5,
-    name: "Ribbed Tank Top",
-    price: "35",
-    category: "T-Shirts",
-    slug: "t-shirts",
-    image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&q=80",
-  },
-  {
-    id: 6,
-    name: "Wide Leg Trousers",
-    price: "79",
-    category: "Bottoms",
-    slug: "bottoms",
-    image: "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=600&q=80",
-  },
-];
+import { supabase } from "../lib/supabase";
+import ProductCard from "./ProductCard";
 
 export default function ProductsGrid() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .order("created_at", { ascending: true })
+        .limit(6);
+
+      if (error) console.error(error);
+      else setProducts(data);
+      setLoading(false);
+    };
+
+    fetchProducts();
+  }, []);
+
   return (
     <section className="max-w-6xl mx-auto px-6 py-24">
 
@@ -71,19 +42,29 @@ export default function ProductsGrid() {
         </Link>
       </div>
 
-      {/* Products grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-12">
-        {products.map((product) => (
-          <ProductCard
-            key={product.id}
-            name={product.name}
-            price={product.price}
-            category={product.category}
-            image={product.image}
-            slug={product.slug}
-          />
-        ))}
-      </div>
+      {/* Loading skeleton */}
+      {loading ? (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-12">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="animate-pulse">
+              <div className="aspect-[3/4] bg-gray-100 mb-4" />
+              <div className="h-3 bg-gray-100 rounded mb-2 w-1/2" />
+              <div className="h-3 bg-gray-100 rounded w-3/4" />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-12">
+          {products.map((product) => (
+            <ProductCard
+              key={product.id}
+              category={product.category}
+              image={product.image}
+              slug={product.category}
+            />
+          ))}
+        </div>
+      )}
 
     </section>
   );

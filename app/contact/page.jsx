@@ -1,18 +1,35 @@
 "use client";
 import { useState } from "react";
+import { supabase } from "../lib/supabase";
 
 export default function Contact() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) return;
-    setSubmitted(true);
+
+    setLoading(true);
+    setError(null);
+
+    const { error } = await supabase
+      .from("messages")
+      .insert([{ name: form.name, email: form.email, message: form.message }]);
+
+    if (error) {
+      setError("Something went wrong. Please try again.");
+      setLoading(false);
+    } else {
+      setSubmitted(true);
+      setLoading(false);
+    }
   };
 
   return (
@@ -118,11 +135,18 @@ export default function Contact() {
                 />
               </div>
 
+              {error && (
+                <p className="text-red-500 text-xs">{error}</p>
+              )}
+
               <button
                 type="submit"
-                className="bg-black text-white px-8 py-4 text-sm tracking-[0.15em] uppercase hover:bg-gray-800 transition-colors"
+                disabled={loading}
+                className={`bg-black text-white px-8 py-4 text-sm tracking-[0.15em] uppercase transition-colors ${
+                  loading ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-800"
+                }`}
               >
-                Send Message
+                {loading ? "Sending..." : "Send Message"}
               </button>
 
             </form>

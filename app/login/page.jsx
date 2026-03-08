@@ -1,23 +1,50 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { supabase } from "../lib/supabase";
 
 export default function Login() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const registered = searchParams.get("registered");
+
   const [form, setForm] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Supabase auth coming soon
+    setError(null);
+
+    if (!form.email || !form.password) {
+      setError("Please fill in all fields.");
+      return;
+    }
+
+    setLoading(true);
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email: form.email,
+      password: form.password,
+    });
+
+    if (error) {
+      setError(error.message);
+      setLoading(false);
+    } else {
+      router.push("/");
+    }
   };
 
   return (
     <div className="min-h-screen bg-white flex">
 
-      {/* Left side — branding */}
+      {/* Left side */}
       <div className="hidden md:flex w-1/2 bg-black flex-col justify-center p-16">
         <div>
           <h2 className="text-4xl font-semibold text-white leading-tight mb-4">
@@ -27,14 +54,20 @@ export default function Login() {
             Sign in to access your orders, saved items and account details.
           </p>
         </div>
-        <p className="text-gray-600 text-xs">
-          © 2026 Hela. All rights reserved.
+        <p className="text-gray-600 text-xs mt-16">
+          © 2025 Hela. All rights reserved.
         </p>
       </div>
 
-      {/* Right side — form */}
+      {/* Right side */}
       <div className="w-full md:w-1/2 flex items-center justify-center px-8">
         <div className="w-full max-w-sm">
+
+          {registered && (
+            <div className="bg-green-50 border border-green-200 text-green-700 text-xs px-4 py-3 mb-6">
+              Account created! Please check your email to confirm, then sign in.
+            </div>
+          )}
 
           <h1 className="text-2xl font-semibold text-black mb-2">
             Sign In
@@ -86,11 +119,18 @@ export default function Login() {
               </button>
             </div>
 
+            {error && (
+              <p className="text-red-500 text-xs">{error}</p>
+            )}
+
             <button
               type="submit"
-              className="w-full bg-black text-white py-4 text-sm tracking-[0.15em] uppercase hover:bg-gray-800 transition-colors mt-2"
+              disabled={loading}
+              className={`w-full bg-black text-white py-4 text-sm tracking-[0.15em] uppercase transition-colors mt-2 ${
+                loading ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-800"
+              }`}
             >
-              Sign In
+              {loading ? "Signing In..." : "Sign In"}
             </button>
 
           </form>
