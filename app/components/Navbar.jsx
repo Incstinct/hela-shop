@@ -62,9 +62,9 @@ export default function Navbar() {
         <div className="flex items-center gap-4 justify-end">
           {user ? (
             <>
-              <span className="hidden md:block text-sm text-gray-500 truncate max-w-[100px]">
-                {user.user_metadata?.full_name || user.email}
-              </span>
+              <Link href="/account" className="hidden md:block text-sm text-gray-500 hover:text-black transition-colors">
+                {user.user_metadata?.full_name?.split(" ")[0] || user.email}
+              </Link>
               <button
                 onClick={handleLogout}
                 className="hidden md:block text-sm text-gray-500 hover:text-black transition-colors"
