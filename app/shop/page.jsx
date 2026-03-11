@@ -1,6 +1,6 @@
 "use client";
 export const dynamic = "force-dynamic";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "../lib/supabase";
@@ -13,7 +13,7 @@ const categories = [
   { label: "Jackets", value: "jackets" },
 ];
 
-export default function Shop() {
+function ShopContent() {
   const searchParams = useSearchParams();
   const [activeCategory, setActiveCategory] = useState("all");
   const [products, setProducts] = useState([]);
@@ -43,19 +43,19 @@ export default function Shop() {
   }, []);
 
   const filtered = products
-  .filter((p) => activeCategory === "all" || p.category === activeCategory)
-  .filter((p) => {
-    if (priceFilter === "under50") return p.price < 50;
-    if (priceFilter === "50to100") return p.price >= 50 && p.price <= 100;
-    if (priceFilter === "over100") return p.price > 100;
-    return true;
-  })
-  .sort((a, b) => {
-    if (sortBy === "price-asc") return a.price - b.price;
-    if (sortBy === "price-desc") return b.price - a.price;
-    if (sortBy === "name-asc") return a.name.localeCompare(b.name);
-    return 0;
-  });
+    .filter((p) => activeCategory === "all" || p.category === activeCategory)
+    .filter((p) => {
+      if (priceFilter === "under50") return p.price < 50;
+      if (priceFilter === "50to100") return p.price >= 50 && p.price <= 100;
+      if (priceFilter === "over100") return p.price > 100;
+      return true;
+    })
+    .sort((a, b) => {
+      if (sortBy === "price-asc") return a.price - b.price;
+      if (sortBy === "price-desc") return b.price - a.price;
+      if (sortBy === "name-asc") return a.name.localeCompare(b.name);
+      return 0;
+    });
 
   return (
     <div className="min-h-screen bg-white pt-24">
@@ -73,7 +73,7 @@ export default function Shop() {
 
         {/* Filters row */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-12">
-          
+
           {/* Category filters */}
           <div className="flex gap-2 flex-wrap">
             {categories.map((cat) => (
@@ -99,7 +99,7 @@ export default function Shop() {
               <select
                 value={priceFilter}
                 onChange={(e) => setPriceFilter(e.target.value)}
-                className="appearance-none border border-gray-200 pl-4 pr-10 py-2 text-xs text-gray-500 uppercase tracking-[0.15em] focus:outline-none focus:border-black transition-colors bg-white cursor-pointer"
+                className="appearance-none border border-gray-200 pl-4 pr-10 py-2 text-xs text-gray-500 uppercase tracking-[0.15em] focus:outline-none transition-colors bg-white cursor-pointer"
               >
                 <option value="all">All Prices</option>
                 <option value="under50">Under $50</option>
@@ -114,7 +114,7 @@ export default function Shop() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="appearance-none border border-gray-200 pl-4 pr-10 py-2 text-xs text-gray-500 uppercase tracking-[0.15em] focus:outline-none focus:border-black transition-colors bg-white cursor-pointer"
+                className="appearance-none border border-gray-200 pl-4 pr-10 py-2 text-xs text-gray-500 uppercase tracking-[0.15em] focus:outline-none transition-colors bg-white cursor-pointer"
               >
                 <option value="default">Sort By</option>
                 <option value="price-asc">Price: Low to High</option>
@@ -176,5 +176,13 @@ export default function Shop() {
 
       </div>
     </div>
+  );
+}
+
+export default function Shop() {
+  return (
+    <Suspense>
+      <ShopContent />
+    </Suspense>
   );
 }
