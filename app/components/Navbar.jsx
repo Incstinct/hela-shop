@@ -12,7 +12,6 @@ export default function Navbar() {
   const [user, setUser] = useState(null);
   const { cartCount } = useCart();
 
-  // Close menu when route changes
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
@@ -39,17 +38,15 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100">
-      <div className="max-w-6xl mx-auto px-6 h-16 grid grid-cols-3 items-center">
+      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between relative">
 
         {/* Logo - left */}
-        <div>
-          <Link href="/" className="text-xl font-semibold tracking-[0.2em] uppercase text-black">
-            Hela
-          </Link>
-        </div>
+        <Link href="/" className="text-xl font-semibold tracking-[0.2em] uppercase text-black">
+          Hela
+        </Link>
 
-        {/* Links - center (desktop only, unchanged) */}
-        <div className="hidden md:flex items-center justify-center gap-8">
+        {/* Links - center (desktop only) */}
+        <div className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
           <Link href="/" className="text-sm text-gray-500 hover:text-black transition-colors">
             Home
           </Link>
@@ -65,7 +62,7 @@ export default function Navbar() {
         </div>
 
         {/* Right side */}
-        <div className="flex items-center gap-4 justify-end">
+        <div className="flex items-center gap-4">
           {user ? (
             <>
               <Link href="/account" className="hidden md:block text-sm text-gray-500 hover:text-black transition-colors">
@@ -84,13 +81,12 @@ export default function Navbar() {
             </Link>
           )}
 
-          {/* Cart — desktop unchanged, mobile compact */}
           <Link href="/cart" className="text-sm font-medium tracking-wide border border-black px-4 py-2 hover:bg-black hover:text-white transition-colors whitespace-nowrap text-black">
             <span className="hidden md:inline">Cart {cartCount > 0 && `(${cartCount})`}</span>
             <span className="md:hidden">{cartCount > 0 ? `(${cartCount})` : "Cart"}</span>
           </Link>
 
-          {/* Mobile menu button — pushed right naturally */}
+          {/* Mobile menu button */}
           <button
             className="md:hidden text-black hover:text-gray-600"
             onClick={() => setMenuOpen(!menuOpen)}
