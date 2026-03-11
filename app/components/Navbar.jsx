@@ -1,15 +1,20 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { supabase } from "../lib/supabase";
 import { useCart } from "../context/CartContext";
 
 export default function Navbar() {
   const router = useRouter();
+  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
   const { cartCount } = useCart();
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
     const getUser = async () => {
@@ -33,33 +38,23 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100">
-      <div className="max-w-6xl mx-auto px-6 h-16 grid grid-cols-3 items-center">
+      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
 
         {/* Logo - left */}
-        <div>
-          <Link href="/" className="text-xl font-semibold tracking-[0.2em] uppercase">
-            Hela
-          </Link>
-        </div>
+        <Link href="/" className="text-xl font-semibold tracking-[0.2em] uppercase text-black">
+          Hela
+        </Link>
 
-        {/* Links - center */}
-        <div className="hidden md:flex items-center justify-center gap-8">
-          <Link href="/" className="text-sm text-gray-500 hover:text-black transition-colors">
-            Home
-          </Link>
-          <Link href="/shop" className="text-sm text-gray-500 hover:text-black transition-colors">
-            Shop
-          </Link>
-          <Link href="/about" className="text-sm text-gray-500 hover:text-black transition-colors">
-            About
-          </Link>
-          <Link href="/contact" className="text-sm text-gray-500 hover:text-black transition-colors">
-            Contact
-          </Link>
+        {/* Links - center (desktop only) */}
+        <div className="hidden md:flex items-center gap-8">
+          <Link href="/" className="text-sm text-gray-500 hover:text-black transition-colors">Home</Link>
+          <Link href="/shop" className="text-sm text-gray-500 hover:text-black transition-colors">Shop</Link>
+          <Link href="/about" className="text-sm text-gray-500 hover:text-black transition-colors">About</Link>
+          <Link href="/contact" className="text-sm text-gray-500 hover:text-black transition-colors">Contact</Link>
         </div>
 
         {/* Right side */}
-        <div className="flex items-center gap-4 justify-end">
+        <div className="flex items-center gap-3">
           {user ? (
             <>
               <Link href="/account" className="hidden md:block text-sm text-gray-500 hover:text-black transition-colors">
@@ -78,13 +73,13 @@ export default function Navbar() {
             </Link>
           )}
 
-          <Link href="/cart" className="text-sm font-medium tracking-wide border border-black px-4 py-2 hover:bg-black hover:text-white transition-colors whitespace-nowrap">
+          <Link href="/cart" className="text-sm font-medium tracking-wide border border-black px-4 py-2 hover:bg-black hover:text-white transition-colors whitespace-nowrap text-black">
             Cart {cartCount > 0 && `(${cartCount})`}
           </Link>
 
           {/* Mobile menu button */}
           <button
-            className="md:hidden text-gray-500 hover:text-black"
+            className="md:hidden text-black hover:text-gray-600 ml-1"
             onClick={() => setMenuOpen(!menuOpen)}
           >
             {menuOpen ? "✕" : "☰"}
@@ -101,9 +96,12 @@ export default function Navbar() {
           <Link href="/about" className="text-sm text-gray-500 hover:text-black transition-colors">About</Link>
           <Link href="/contact" className="text-sm text-gray-500 hover:text-black transition-colors">Contact</Link>
           {user ? (
-            <button onClick={handleLogout} className="text-sm text-gray-500 hover:text-black transition-colors text-left">
-              Logout
-            </button>
+            <>
+              <Link href="/account" className="text-sm text-gray-500 hover:text-black transition-colors">Account</Link>
+              <button onClick={handleLogout} className="text-sm text-gray-500 hover:text-black transition-colors text-left">
+                Logout
+              </button>
+            </>
           ) : (
             <Link href="/login" className="text-sm text-gray-500 hover:text-black transition-colors">Login</Link>
           )}
