@@ -60,6 +60,7 @@ export default function Cart() {
                       </h3>
                       <p className="text-xs text-gray-400">
                         Size: {item.size}
+                        {item.selectedColor && ` · ${item.selectedColor}`}
                       </p>
                     </div>
 

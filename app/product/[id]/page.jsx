@@ -9,7 +9,10 @@ export default function ProductPage({ params }) {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedSize, setSelectedSize] = useState(null);
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [currentImage, setCurrentImage] = useState(null);
   const [added, setAdded] = useState(false);
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -20,18 +23,32 @@ export default function ProductPage({ params }) {
         .single();
 
       if (error) console.error(error);
-      else setProduct(data);
+      else {
+        setProduct(data);
+        setCurrentImage(data.image);
+        if (data.colors && data.colors.length > 0) {
+          setSelectedColor(data.colors[0]);
+          if (data.colors[0].image) setCurrentImage(data.colors[0].image);
+        }
+      }
       setLoading(false);
     };
 
     fetchProduct();
   }, [id]);
 
-  const { addToCart } = useCart();
+  const handleColorSelect = (color) => {
+    setSelectedColor(color);
+    if (color.image) setCurrentImage(color.image);
+  };
 
   const handleAddToCart = () => {
     if (!selectedSize) return;
-    addToCart(product, selectedSize);
+    addToCart({
+      ...product,
+      selectedColor: selectedColor?.name || null,
+      image: currentImage,
+    }, selectedSize);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };
@@ -83,9 +100,9 @@ export default function ProductPage({ params }) {
           {/* Image */}
           <div className="aspect-[3/4] bg-gray-100 overflow-hidden rounded-2xl">
             <img
-              src={product.image}
+              src={currentImage}
               alt={product.name}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover transition-opacity duration-300"
             />
           </div>
 
@@ -103,6 +120,30 @@ export default function ProductPage({ params }) {
             <p className="text-gray-500 text-sm leading-relaxed mb-10">
               {product.description}
             </p>
+
+            {/* Color selector */}
+            {product.colors && product.colors.length > 0 && (
+              <div className="mb-8">
+                <p className="text-xs tracking-[0.15em] uppercase text-gray-400 mb-3">
+                  Color — <span className="text-black">{selectedColor?.name}</span>
+                </p>
+                <div className="flex gap-3">
+                  {product.colors.map((color) => (
+                    <button
+                      key={color.name}
+                      onClick={() => handleColorSelect(color)}
+                      title={color.name}
+                      className={`w-8 h-8 rounded-full border-2 transition-all ${
+                        selectedColor?.name === color.name
+                          ? "border-black scale-110"
+                          : "border-transparent hover:border-gray-300"
+                      }`}
+                      style={{ backgroundColor: color.hex }}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Size selector */}
             <div className="mb-8">

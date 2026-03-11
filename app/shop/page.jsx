@@ -17,6 +17,8 @@ export default function Shop() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [priceFilter, setPriceFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("default");
 
   useEffect(() => {
     const category = searchParams.get("category");
@@ -39,9 +41,20 @@ export default function Shop() {
     fetchProducts();
   }, []);
 
-  const filtered = activeCategory === "all"
-    ? products
-    : products.filter((p) => p.category === activeCategory);
+  const filtered = products
+  .filter((p) => activeCategory === "all" || p.category === activeCategory)
+  .filter((p) => {
+    if (priceFilter === "under50") return p.price < 50;
+    if (priceFilter === "50to100") return p.price >= 50 && p.price <= 100;
+    if (priceFilter === "over100") return p.price > 100;
+    return true;
+  })
+  .sort((a, b) => {
+    if (sortBy === "price-asc") return a.price - b.price;
+    if (sortBy === "price-desc") return b.price - a.price;
+    if (sortBy === "name-asc") return a.name.localeCompare(b.name);
+    return 0;
+  });
 
   return (
     <div className="min-h-screen bg-white pt-24">
@@ -57,21 +70,59 @@ export default function Shop() {
           </h1>
         </div>
 
-        {/* Category filters */}
-        <div className="flex gap-2 mb-12 flex-wrap">
-          {categories.map((cat) => (
-            <button
-              key={cat.value}
-              onClick={() => setActiveCategory(cat.value)}
-              className={`px-5 py-2 text-xs tracking-[0.15em] uppercase transition-colors ${
-                activeCategory === cat.value
-                  ? "bg-black text-white"
-                  : "border border-gray-200 text-gray-500 hover:border-black hover:text-black"
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
+        {/* Filters row */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-12">
+          
+          {/* Category filters */}
+          <div className="flex gap-2 flex-wrap">
+            {categories.map((cat) => (
+              <button
+                key={cat.value}
+                onClick={() => setActiveCategory(cat.value)}
+                className={`px-5 py-2 text-xs tracking-[0.15em] uppercase transition-colors ${
+                  activeCategory === cat.value
+                    ? "bg-black text-white"
+                    : "border border-gray-200 text-gray-500 hover:border-black hover:text-black"
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Right side — price + sort */}
+          <div className="flex items-center gap-3">
+
+            {/* Price filter */}
+            <div className="relative">
+              <select
+                value={priceFilter}
+                onChange={(e) => setPriceFilter(e.target.value)}
+                className="appearance-none border border-gray-200 pl-4 pr-10 py-2 text-xs text-gray-500 uppercase tracking-[0.15em] focus:outline-none focus:border-black transition-colors bg-white cursor-pointer"
+              >
+                <option value="all">All Prices</option>
+                <option value="under50">Under $50</option>
+                <option value="50to100">$50 — $100</option>
+                <option value="over100">Over $100</option>
+              </select>
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-xs">▾</span>
+            </div>
+
+            {/* Sort */}
+            <div className="relative">
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="appearance-none border border-gray-200 pl-4 pr-10 py-2 text-xs text-gray-500 uppercase tracking-[0.15em] focus:outline-none focus:border-black transition-colors bg-white cursor-pointer"
+              >
+                <option value="default">Sort By</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="name-asc">Name: A to Z</option>
+              </select>
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-xs">▾</span>
+            </div>
+          </div>
         </div>
 
         {/* Product count */}
