@@ -12,6 +12,7 @@ export default function Navbar() {
   const [user, setUser] = useState(null);
   const { cartCount } = useCart();
 
+  // Close menu when route changes
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
@@ -38,23 +39,33 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100">
-      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-6 h-16 grid grid-cols-3 items-center">
 
         {/* Logo - left */}
-        <Link href="/" className="text-xl font-semibold tracking-[0.2em] uppercase text-black">
-          Hela
-        </Link>
+        <div>
+          <Link href="/" className="text-xl font-semibold tracking-[0.2em] uppercase text-black">
+            Hela
+          </Link>
+        </div>
 
-        {/* Links - center (desktop only) */}
-        <div className="hidden md:flex items-center gap-8">
-          <Link href="/" className="text-sm text-gray-500 hover:text-black transition-colors">Home</Link>
-          <Link href="/shop" className="text-sm text-gray-500 hover:text-black transition-colors">Shop</Link>
-          <Link href="/about" className="text-sm text-gray-500 hover:text-black transition-colors">About</Link>
-          <Link href="/contact" className="text-sm text-gray-500 hover:text-black transition-colors">Contact</Link>
+        {/* Links - center (desktop only, unchanged) */}
+        <div className="hidden md:flex items-center justify-center gap-8">
+          <Link href="/" className="text-sm text-gray-500 hover:text-black transition-colors">
+            Home
+          </Link>
+          <Link href="/shop" className="text-sm text-gray-500 hover:text-black transition-colors">
+            Shop
+          </Link>
+          <Link href="/about" className="text-sm text-gray-500 hover:text-black transition-colors">
+            About
+          </Link>
+          <Link href="/contact" className="text-sm text-gray-500 hover:text-black transition-colors">
+            Contact
+          </Link>
         </div>
 
         {/* Right side */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4 justify-end">
           {user ? (
             <>
               <Link href="/account" className="hidden md:block text-sm text-gray-500 hover:text-black transition-colors">
@@ -73,13 +84,15 @@ export default function Navbar() {
             </Link>
           )}
 
+          {/* Cart — desktop unchanged, mobile compact */}
           <Link href="/cart" className="text-sm font-medium tracking-wide border border-black px-4 py-2 hover:bg-black hover:text-white transition-colors whitespace-nowrap text-black">
-            Cart {cartCount > 0 && `(${cartCount})`}
+            <span className="hidden md:inline">Cart {cartCount > 0 && `(${cartCount})`}</span>
+            <span className="md:hidden">{cartCount > 0 ? `(${cartCount})` : "Cart"}</span>
           </Link>
 
-          {/* Mobile menu button */}
+          {/* Mobile menu button — pushed right naturally */}
           <button
-            className="md:hidden text-black hover:text-gray-600 ml-1"
+            className="md:hidden text-black hover:text-gray-600"
             onClick={() => setMenuOpen(!menuOpen)}
           >
             {menuOpen ? "✕" : "☰"}
