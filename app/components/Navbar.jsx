@@ -38,7 +38,7 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100">
-      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between relative">
+      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
 
         {/* Logo - left */}
         <Link href="/" className="text-xl font-semibold tracking-[0.2em] uppercase text-black">
@@ -46,23 +46,15 @@ export default function Navbar() {
         </Link>
 
         {/* Links - center (desktop only) */}
-        <div className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
-          <Link href="/" className="text-sm text-gray-500 hover:text-black transition-colors">
-            Home
-          </Link>
-          <Link href="/shop" className="text-sm text-gray-500 hover:text-black transition-colors">
-            Shop
-          </Link>
-          <Link href="/about" className="text-sm text-gray-500 hover:text-black transition-colors">
-            About
-          </Link>
-          <Link href="/contact" className="text-sm text-gray-500 hover:text-black transition-colors">
-            Contact
-          </Link>
+        <div className="hidden md:flex items-center gap-8">
+          <Link href="/" className="text-sm text-gray-500 hover:text-black transition-colors">Home</Link>
+          <Link href="/shop" className="text-sm text-gray-500 hover:text-black transition-colors">Shop</Link>
+          <Link href="/about" className="text-sm text-gray-500 hover:text-black transition-colors">About</Link>
+          <Link href="/contact" className="text-sm text-gray-500 hover:text-black transition-colors">Contact</Link>
         </div>
 
         {/* Right side */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           {user ? (
             <>
               <Link href="/account" className="hidden md:block text-sm text-gray-500 hover:text-black transition-colors">
@@ -82,13 +74,12 @@ export default function Navbar() {
           )}
 
           <Link href="/cart" className="text-sm font-medium tracking-wide border border-black px-4 py-2 hover:bg-black hover:text-white transition-colors whitespace-nowrap text-black">
-            <span className="hidden md:inline">Cart {cartCount > 0 && `(${cartCount})`}</span>
-            <span className="md:hidden">{cartCount > 0 ? `(${cartCount})` : "Cart"}</span>
+            Cart {cartCount > 0 && `(${cartCount})`}
           </Link>
 
           {/* Mobile menu button */}
           <button
-            className="md:hidden text-black hover:text-gray-600"
+            className="md:hidden text-black hover:text-gray-600 ml-1"
             onClick={() => setMenuOpen(!menuOpen)}
           >
             {menuOpen ? "✕" : "☰"}
