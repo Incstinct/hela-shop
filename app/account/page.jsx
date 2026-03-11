@@ -131,7 +131,7 @@ export default function Account() {
         <div className="w-full h-px bg-gray-100 mb-12" />
 
         {/* Tabs */}
-        <div className="flex gap-8 mb-12 border-b border-gray-100">
+        <div className="flex gap-4 mb-12 border-b border-gray-100 overflow-x-auto scrollbar-none">
           {["details", "password", "orders", "settings"].map((tab) => (
             <button
               key={tab}
@@ -140,7 +140,7 @@ export default function Account() {
                 setError(null);
                 setSuccess(null);
               }}
-              className={`text-xs tracking-[0.2em] uppercase pb-4 transition-colors ${
+              className={`text-xs tracking-[0.1em] uppercase pb-4 transition-colors whitespace-nowrap ${
                 activeTab === tab
                   ? "text-black border-b-2 border-black"
                   : "text-gray-400 hover:text-black"
