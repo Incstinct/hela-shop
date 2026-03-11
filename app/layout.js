@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
           <Navbar />
           {children}
           <Footer />
-          <ChatWidget />
+          {/* <ChatWidget /> */}
         </CartProvider>
       </body>
     </html>
