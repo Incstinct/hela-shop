@@ -75,7 +75,6 @@ export default function Account() {
       return;
     }
 
-    // Verify current password first
     const { error: signInError } = await supabase.auth.signInWithPassword({
       email: user.email,
       password: passwordForm.current,
@@ -132,7 +131,7 @@ export default function Account() {
 
         {/* Tabs */}
         <div className="flex gap-8 mb-12 border-b border-gray-100">
-          {["details", "password", "orders"].map((tab) => (
+          {["details", "password", "orders", "settings"].map((tab) => (
             <button
               key={tab}
               onClick={() => {
@@ -197,7 +196,6 @@ export default function Account() {
         {/* Password Tab */}
         {activeTab === "password" && (
           <form onSubmit={handleUpdatePassword} className="max-w-md flex flex-col gap-6">
-
             <div>
               <label className="text-xs tracking-[0.15em] uppercase text-gray-400 mb-2 block">
                 Current Password
@@ -262,6 +260,102 @@ export default function Account() {
             >
               Start Shopping
             </Link>
+          </div>
+        )}
+
+        {/* Settings Tab */}
+        {activeTab === "settings" && (
+          <div className="max-w-md flex flex-col gap-12">
+
+            {/* Notifications */}
+            <div>
+              <h3 className="text-sm font-semibold tracking-[0.15em] uppercase text-black mb-6">
+                Notifications
+              </h3>
+              <div className="flex flex-col gap-4">
+                {[
+                  { id: "orderShipped", label: "Email me when my order ships" },
+                  { id: "newDrops", label: "Notify me about new drops" },
+                  { id: "newsletter", label: "Subscribe to newsletter" },
+                ].map((item) => (
+                  <label key={item.id} className="flex items-center justify-between cursor-pointer group">
+                    <span className="text-sm text-gray-600 group-hover:text-black transition-colors">
+                      {item.label}
+                    </span>
+                    <div className="relative">
+                      <input
+                        type="checkbox"
+                        defaultChecked={item.id === "orderShipped"}
+                        className="sr-only peer"
+                        id={item.id}
+                      />
+                      <label
+                        htmlFor={item.id}
+                        className="w-10 h-5 bg-gray-200 rounded-full cursor-pointer peer-checked:bg-black transition-colors block after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:w-4 after:h-4 after:bg-white after:rounded-full after:transition-transform peer-checked:after:translate-x-5"
+                      />
+                    </div>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div className="w-full h-px bg-gray-100" />
+
+            {/* Preferences */}
+            <div>
+              <h3 className="text-sm font-semibold tracking-[0.15em] uppercase text-black mb-6">
+                Preferences
+              </h3>
+              <div>
+                <label className="text-xs tracking-[0.15em] uppercase text-gray-400 mb-2 block">
+                  Language
+                </label>
+                <div className="relative">
+                  <select
+                    defaultValue="en"
+                    className="appearance-none w-full border border-gray-200 pl-4 pr-10 py-3 text-sm text-black focus:outline-none focus:border-black transition-colors bg-white cursor-pointer"
+                  >
+                    <option value="en">English</option>
+                    <option value="pl">Polski</option>
+                    <option value="ru">Русский</option>
+                    <option value="nl">Nederlands</option>
+                  </select>
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-xs">▾</span>
+                </div>
+                <p className="text-xs text-gray-300 mt-2">Multi-language support coming soon.</p>
+              </div>
+            </div>
+
+            <div className="w-full h-px bg-gray-100" />
+
+            {/* Privacy */}
+            <div>
+              <h3 className="text-sm font-semibold tracking-[0.15em] uppercase text-black mb-6">
+                Privacy
+              </h3>
+              <div className="flex flex-col gap-4">
+                <p className="text-sm text-gray-400 leading-relaxed">
+                  Deleting your account is permanent. All your data including orders and personal details will be removed.
+                </p>
+                <button
+                  onClick={async () => {
+                    if (confirm("Are you sure you want to delete your account? This cannot be undone.")) {
+                      const { error } = await supabase.rpc("delete_user");
+                      if (error) {
+                        alert("Something went wrong. Please try again.");
+                      } else {
+                        await supabase.auth.signOut();
+                        router.push("/");
+                      }
+                    }
+                  }}
+                  className="w-fit text-xs tracking-[0.15em] uppercase text-red-400 hover:text-red-600 border border-red-200 hover:border-red-400 px-6 py-3 transition-colors"
+                >
+                  Delete Account
+                </button>
+              </div>
+            </div>
+
           </div>
         )}
 
