@@ -63,10 +63,10 @@ function ShopContent() {
 
         {/* Header */}
         <div className="mb-12">
-          <span className="text-xs tracking-[0.3em] uppercase text-gray-400">
+          <span className="text-xs tracking-[0.3em] uppercase text-gray-500">
             Collection
           </span>
-          <h1 className="text-4xl font-semibold tracking-tight mt-1">
+          <h1 className="text-4xl font-semibold tracking-tight mt-1 text-black">
             Shop
           </h1>
         </div>

@@ -30,10 +30,10 @@ export default function ProductsGrid() {
       {/* Section header */}
       <div className="flex items-end justify-between mb-12">
         <div>
-          <span className="text-xs tracking-[0.3em] uppercase text-gray-400">
+          <span className="text-xs tracking-[0.3em] uppercase text-gray-500">
             Featured
           </span>
-          <h2 className="text-3xl font-semibold tracking-tight mt-1">
+          <h2 className="text-3xl font-semibold tracking-tight mt-1 text-black">
             New Arrivals
           </h2>
         </div>

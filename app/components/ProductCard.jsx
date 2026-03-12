@@ -21,7 +21,7 @@ export default function ProductCard({ category, image, slug }) {
       </div>
 
       {/* Category label */}
-      <p className="text-xs tracking-[0.15em] uppercase text-gray-400 mt-4">
+      <p className="text-xs tracking-[0.15em] uppercase text-gray-700 mt-4">
         {category}
       </p>
 
