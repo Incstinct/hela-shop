@@ -58,7 +58,7 @@ function ShopContent() {
     });
 
   return (
-    <div className="min-h-screen bg-white pt-24">
+    <div className="min-h-screen bg-white pt-24 pb-24">
       <div className="max-w-6xl mx-auto px-6">
 
         {/* Header */}
@@ -133,7 +133,7 @@ function ShopContent() {
 
         {/* Products grid */}
         {loading ? (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-12 mb-24">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-12">
             {[...Array(8)].map((_, i) => (
               <div key={i} className="animate-pulse">
                 <div className="aspect-[3/4] bg-gray-100 mb-4" />
@@ -143,7 +143,7 @@ function ShopContent() {
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-12 mb-24">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-12">
             {filtered.map((product) => (
               <Link
                 key={product.id}
