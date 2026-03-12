@@ -85,7 +85,7 @@ export default function Cart() {
                       </div>
                       <button
                         onClick={() => removeFromCart(item.id, item.size)}
-                        className="text-xs text-gray-300 hover:text-black transition-colors tracking-wide uppercase"
+                        className="text-xs text-gray-400 hover:text-red-500 transition-colors tracking-wide uppercase ml-4 border border-gray-200 hover:border-red-300 px-3 py-1"
                       >
                         Remove
                       </button>
