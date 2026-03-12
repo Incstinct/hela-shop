@@ -162,7 +162,7 @@ function ShopContent() {
                     </span>
                   </div>
                 </div>
-                <p className="text-xs tracking-[0.15em] uppercase text-gray-400 mb-1">
+                <p className="text-xs tracking-[0.15em] uppercase text-gray-700 mb-1">
                   {product.category}
                 </p>
                 <div className="flex items-center justify-between">
