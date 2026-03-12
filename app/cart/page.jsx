@@ -39,10 +39,10 @@ export default function Cart() {
             {/* Items */}
             <div className="md:col-span-2 flex flex-col gap-8">
               {cartItems.map((item) => (
-                <div key={`${item.id}-${item.size}`} className="flex gap-6 pb-8 border-b border-gray-100 items-start">
+                <div key={`${item.id}-${item.size}`} className="flex gap-4 pb-8 border-b border-gray-100 items-start">
 
                   <Link href={`/product/${item.id}`}>
-                    <div className="w-24 h-32 bg-gray-100 overflow-hidden flex-shrink-0">
+                    <div className="w-20 h-28 bg-gray-100 overflow-hidden flex-shrink-0">
                       <img
                         src={item.image}
                         alt={item.name}
@@ -51,7 +51,8 @@ export default function Cart() {
                     </div>
                   </Link>
 
-                  <div className="flex-1 flex flex-col justify-between h-32">
+                  {/* Middle - product info + quantity */}
+                  <div className="flex-1 flex flex-col justify-between h-28">
                     <div>
                       <p className="text-xs tracking-[0.15em] uppercase text-gray-400 mb-1">
                         {item.category}
@@ -65,38 +66,39 @@ export default function Cart() {
                       </p>
                     </div>
 
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center border border-gray-200">
-                        <button
-                          onClick={() => updateQuantity(item.id, item.size, -1)}
-                          className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-black transition-colors text-lg"
-                        >
-                          −
-                        </button>
-                        <span className="w-8 h-8 flex items-center justify-center text-sm text-black">
-                          {item.quantity}
-                        </span>
-                        <button
-                          onClick={() => updateQuantity(item.id, item.size, 1)}
-                          className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-black transition-colors text-lg"
-                        >
-                          +
-                        </button>
-                      </div>
+                    <div className="flex items-center border border-gray-200 w-fit">
                       <button
-                        onClick={() => removeFromCart(item.id, item.size)}
-                        className="text-xs text-gray-400 hover:text-red-500 transition-colors tracking-wide uppercase ml-4 border border-gray-200 hover:border-red-300 px-3 py-1"
+                        onClick={() => updateQuantity(item.id, item.size, -1)}
+                        className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-black transition-colors text-lg"
                       >
-                        Remove
+                        −
+                      </button>
+                      <span className="w-8 h-8 flex items-center justify-center text-sm text-black">
+                        {item.quantity}
+                      </span>
+                      <button
+                        onClick={() => updateQuantity(item.id, item.size, 1)}
+                        className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-black transition-colors text-lg"
+                      >
+                        +
                       </button>
                     </div>
                   </div>
 
-                  <div className="text-sm font-medium text-black text-right flex-shrink-0 w-16">
-                    <span>${item.price * item.quantity}</span>
-                    {item.quantity > 1 && (
-                      <p className="text-xs text-gray-400 mt-1">${item.price} x {item.quantity}</p>
-                    )}
+                  {/* Right - price + remove */}
+                  <div className="flex flex-col items-end justify-between h-28 flex-shrink-0">
+                    <div className="text-sm font-medium text-black text-right">
+                      <span>${item.price * item.quantity}</span>
+                      {item.quantity > 1 && (
+                        <p className="text-xs text-gray-400 mt-1">${item.price} x {item.quantity}</p>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => removeFromCart(item.id, item.size)}
+                      className="h-8 px-3 flex items-center justify-center border border-red-200 text-red-400 hover:bg-red-500 hover:text-white hover:border-red-500 transition-colors text-xs tracking-wide uppercase"
+                    >
+                      Remove
+                    </button>
                   </div>
 
                 </div>
