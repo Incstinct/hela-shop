@@ -79,10 +79,12 @@ export default function Navbar() {
 
           {/* Mobile menu button */}
           <button
-            className="md:hidden text-black hover:text-gray-600 ml-1"
+            className="md:hidden text-black hover:text-gray-600 flex flex-col justify-center items-center w-8 h-8 gap-1.5"
             onClick={() => setMenuOpen(!menuOpen)}
           >
-            {menuOpen ? "✕" : "☰"}
+            <span className={`block w-5 h-0.5 bg-black transition-all duration-300 ${menuOpen ? "rotate-45 translate-y-2" : ""}`} />
+            <span className={`block w-5 h-0.5 bg-black transition-all duration-300 ${menuOpen ? "opacity-0" : ""}`} />
+            <span className={`block w-5 h-0.5 bg-black transition-all duration-300 ${menuOpen ? "-rotate-45 -translate-y-2" : ""}`} />
           </button>
         </div>
 
